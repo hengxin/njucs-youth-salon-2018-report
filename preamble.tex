@@ -1,0 +1,169 @@
+% file: preamble.tex
+
+\usepackage{xeCJK}
+\usepackage{zhnumber}	% counters in Chinese
+\usepackage{fontspec}
+\usepackage{comment}
+\usepackage{xifthen}
+\usepackage{verbatim}
+
+\usetheme{CambridgeUS} % try Madrid
+\usecolortheme{beaver} % try beaver, dolphin, seahorse
+% \usefonttheme[onlymath]{serif} % try "professionalfonts"
+\usefonttheme{serif}  % standard font (same with that in ``standalone'')
+\setCJKmainfont{Microsoft YaHei} % try SimSun
+
+\usepackage{amsmath, amsfonts, amssymb, mathtools, pifont}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\def\checkmark{\tikz\fill[scale=0.5](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} 
+
+\usepackage[normalem]{ulem} % strike through text
+\newcommand{\soutthick}[1]{%
+    \renewcommand{\ULthickness}{2.0pt}%
+       \sout{#1}%
+    \renewcommand{\ULthickness}{.4pt}% Resetting to ulem default
+}
+
+\setbeamersize{text margin left = 2em, text margin right = 1em}
+\setbeamercolor{footnote mark}{fg = teal}
+\setbeamertemplate{itemize items}[default]
+\setbeamertemplate{enumerate items}[default]
+
+% \hypersetup{colorlinks = false, urlcolor = DarkRed}
+
+% \usepackage{perpage} %the perpage package
+% \MakePerPage{footnote} %the perpage package command
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows.meta, shapes, positioning, calc, chains, backgrounds, fit, mindmap, intersections}
+
+\newcommand*{\circled}[2][]{\tikz[baseline=(C.base)]{
+    \node[inner sep = 0pt] (C) {\vphantom{1g}#2};
+    \node[draw, circle, inner sep = 3pt, yshift = 1pt, fill = red!40, opacity = 0.5]
+        at (C.center) {\vphantom{1g}};}}
+
+\theoremstyle{plain}
+\newtheorem{cdef}{定义}[section]
+\newtheorem{ctheorem}{定理}[section]
+\newtheorem{clemma}{引理}[section]
+\newtheorem{cquestion}{问题:}[section]
+\newtheorem{cobservation}{观察}[section]
+\newtheorem{prop}{命题}
+\theoremstyle{proof}
+\newtheorem{cproof}{证明}[section]
+
+% for tables
+\usepackage{multirow}
+\newcommand{\innercell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+\usepackage{hhline}
+%%%%%%%%%%%%%% for appendix %%%%%%%%%%%%%%%%
+% http://www-ljk.imag.fr/membres/Jerome.Lelong/latex/appendixnumberbeamer.sty
+% Reference: http://tex.stackexchange.com/questions/2541/beamer-frame-numbering-in-appendix
+\usepackage{appendixnumberbeamer}
+% Add total frame count to slides, optional. From Stefan,
+% http://www.latex-community.org/forum/viewtopic.php?f=4&t=2173
+\expandafter\def\expandafter\insertshorttitle\expandafter{%
+  \insertshorttitle\hfill\insertframenumber\,/\,\inserttotalframenumber}
+%%%%%%%%%%%%%% for appendix %%%%%%%%%%%%%%%%
+\usepackage{graphicx, subcaption}
+
+\usepackage{caption}
+\DeclareCaptionLabelSeparator{none}{}
+\captionsetup{labelsep = none}
+
+\usepackage[export]{adjustbox}
+% for fig without caption: #1: width/size; #2: fig file
+\newcommand{\fignocaption}[2]{
+  \begin{figure}[htp]
+    \centering
+    \includegraphics[#1]{#2}
+  \end{figure}
+}
+
+% for fig without caption: #1: width/size; #2: fig file; #3: fig caption
+\newcommand{\fig}[3]{
+  \begin{figure}[htp]
+    \centering
+      \includegraphics[#1]{#2}
+      \caption{#3}
+  \end{figure}
+}
+
+% colors
+\definecolor{DarkRed}{rgb}{0.55, 0.0, 0.0}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\redoverlay}[2]{\textcolor<#2>{red}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+\newcommand{\greenoverlay}[2]{\textcolor<#2>{green}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\blueoverlay}[2]{\textcolor<#2>{blue}{#1}}
+\newcommand{\purple}[1]{\textcolor{purple}{#1}}
+\newcommand{\cyan}[1]{\textcolor{cyan}{#1}}
+\newcommand{\violet}[1]{\textcolor{violet}{#1}}
+\newcommand{\lgray}[1]{\textcolor{lightgray}{#1}}
+\newcommand{\teal}[1]{\textcolor{teal}{#1}}
+\newcommand{\brown}[1]{\textcolor{brown}{#1}}
+
+\newcommand{\wlspec}{$\mathcal{A}_{\text{weak}}$}
+
+% colorded box
+\newcommand{\rbox}[1]{\red{\boxed{#1}}}
+\newcommand{\gbox}[1]{\green{\boxed{#1}}}
+\newcommand{\bbox}[1]{\blue{\boxed{#1}}}
+\newcommand{\pbox}[1]{\purple{\boxed{#1}}}
+
+\usepackage[linewidth = 1pt, framemethod = TikZ]{mdframed}
+\mdfsetup{frametitlealignment=\center}
+
+\newcommand{\hl}[1]{\fcolorbox{yellow}{yellow!60}{#1}}
+
+% for cite: #1: author; #2: conference #3: year
+\newcommand{\citeinbeamer}[3]{{\tiny{\textcolor{blue}{[#1@#2'#3]}}}}
+
+\usepackage[natbib = true, backend = bibtex, style = authoryear]{biblatex}
+\setbeamertemplate{bibliography item}[article]
+\renewcommand*{\bibfont}{\footnotesize}
+\addbibresource{ccf2018-report.bib}
+
+\newcommand{\ncite}[1]{\violet{\footnotesize [\cite{#1}]}}
+
+\newcommand{\term}[1]{\small (#1)}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\question}[1]{\textcolor{red}{\centerline{#1}}}
+\newcommand{\answer}[1]{\textcolor{blue}{\centerline {#1}}}
+\newcommand{\alertred}[1]{\textcolor{red}{#1}}
+\newcommand{\alertblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1}}
+\newcommand{\mathbfblue}[1]{\textcolor{blue}{$\mathbf{#1}$}}
+
+\newcommand{\hhref}[2]{\centerline{\href{#1}{\purple{\underline{#2}}}}}
+
+\newcommand{\papertitle}{复制数据类型理论研究}
+
+\newcommand{\thankyou}{
+  \begin{frame}{}
+    \begin{columns}
+      \column{0.50\textwidth}
+	\fignocaption{width = 0.80\textwidth}{figs/rdt-research-two-work}
+      \column{0.50\textwidth}
+	\fignocaption{width = 0.80\textwidth}{figs/thankyou}
+    \end{columns}
+
+    \begin{columns}[b]
+      \column{0.30\textwidth}
+	\fignocaption{width = 0.90\textwidth}{figs/hfwei-mail}
+	\vspace{-0.20cm}
+	\hhref{http://www.bigoh.net/wiki/index.php/user:Hengfeng-Wei}{hengxin@homepage}
+      \column{0.30\textwidth}
+	\fignocaption{width = 0.50\textwidth}{figs/github-icon}
+	\vspace{-0.20cm}
+	\hhref{https://github.com/hengxin}{hengxin@github}
+      \column{0.30\textwidth}
+	\fignocaption{width = 0.80\textwidth}{figs/hengxin-stack}
+	\vspace{-0.20cm}
+	\hhref{https://stackexchange.com/users/2055160/hengxin}{hengxin@stackexchange}
+    \end{columns}
+  \end{frame}
+}

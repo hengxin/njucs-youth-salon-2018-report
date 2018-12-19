@@ -1,0 +1,247 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+\subsection{PA2AM: (2-)Atomicity 一致性维护与量化}
+
+%%%%%%%%%%%%%%%
+\begin{frame}{PA2AM 工作在技术框架中的位置}
+  \fig{width = 0.50\textwidth}{figs/3d-framework-pa2am.pdf}{PA2AM --- (2-)Atomicity 一致性维护与量化.}
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{研究动机}
+  \question{问题: 为什么提出 probabilistically-atomic 2-atomicity {\small (PA2AM)} 一致性?}
+  \vspace{0.20cm}
+
+  \pause
+  ``数据一致性/访问延迟'' PACELC 权衡 \citeinbeamer{Abadi}{IEEE Computer}{12}:
+
+  \fignocaption{width = 0.35\textwidth}{figs/stronger-consistency-tradeoff.pdf}
+
+  % \begin{quote}
+  %   ``As soon as a distributed storage system replicates data, a \textcolor{brown}{tradeoff 
+  %   between consistency and latency} arises.''
+  % \end{quote}
+
+  \pause
+
+  ``低延迟''至关重要:
+  \begin{itemize}
+	\item 100ms 额外延迟 $\Rightarrow$ 1\% 销售下滑 \href{http://glinden.blogspot.com/2006/11/marissa-mayer-at-web-20.html}{\citeinbeamer{Amazon}{Blog}{06}}
+	\item 100$\sim$400ms 额外延迟 $\Rightarrow$ 0.2\%$\sim$0.6\% 搜索量下降 \href{Speed Matters for Google Web Search}{\citeinbeamer{Google}{Blog}{09}}
+  \end{itemize}
+
+  % {\small
+  % \begin{table}
+  %   \begin{tabular}{c|c}
+  %     \textcolor{blue}{\bf 系统} & \textcolor{blue}{\bf 一致性}		\\ \hline
+  %     Dynamo@Amazon \citeinbeamer{Amazon}{SOSP}{07} & eventual consistency \\ \hline
+  %     PNUTS@Yahoo! \citeinbeamer{Yahoo!}{PVLDB}{08} & cache consistency \\ \hline
+  %     Tao@Facebook \citeinbeamer{Facebook}{ATC}{13} & $\le$ read-after-write \\ \hline
+  %   \end{tabular}
+  % \end{table}
+  % }
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{PA2AM 一致性}
+  \begin{center}
+	\uncover<2->{\textcolor{blue}{``近乎强''一致性 {\small (Almost Strong Consistency)}: }}
+	
+	在保证\textcolor{red}{低延迟}的情况下获得\textcolor{red}{尽可能强}的数据一致性
+  \end{center}
+
+  \uncover<3->{
+  \begin{cdef}[PA2AM 一致性]
+	\begin{description}
+	  \setlength{\itemsep}{5pt}
+	  \item[低延迟:] \uncover<4->{读操作只需一轮网络通信} 
+	  \item[尽可能强:] \uncover<6->{对 atomicity {\small (strongest)} 的弱化}
+		\begin{itemize}
+		  \item<7-> \textcolor{brown}{\it (版本)} 2-atomicity: 允许读陈旧值, 但\textcolor{red}{陈旧度 $k \le 2$}
+		  \item<8-> \textcolor{brown}{\it (概率)} \textcolor{red}{$\mathbb{P}(k = 2)$ 很小}
+		\end{itemize}
+    \end{description}
+  \end{cdef}
+  }
+
+  \vspace{0.20cm}
+  \uncover<5->{
+  \begin{ctheorem}[不可能性结果]
+    (单写模型下) 不存在低延迟的 atomicity 维护算法 \citeinbeamer{Dutta}{PODC}{04}.
+  \end{ctheorem}
+  }
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{PA2AM 一致性}
+  出租车实时位置查询一致性需求:
+  \begin{description}
+	\item[场景:] 出租车实时更新位置信息 {\small (副本)}
+    \item[权衡:] 为了保证查询低延迟, 允许违反 \textcolor{blue}{\small atomicity}
+	  \pause
+	\item[有界需求:] 满足\;{\small \textcolor{blue}{2}-atomicity}
+	\item[量化需求:] 违反 atomicity 的读请求低于 \textcolor{blue}{$1\%$}
+  \end{description}
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{PA2AM 维护算法}
+  \fig{width = 0.85\textwidth}{figs/atomicity-2am-read-compare.pdf}
+  {经典 atomicity 算法中, 读操作需两轮网络通信 \citeinbeamer{Attiya}{JACM}{95} 
+  \citeinbeamer{Dutta}{PODC}{04}. 
+  PA2AM 算法实现 2-atomicity {\scriptsize (单写模型下)}, 读操作只需一轮网络通信.}
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{PA2AM 量化分析}
+  \question{问题: PA2AM 维护算法在多大程度上违反了 atomicity?}
+
+  \pause
+  \vspace{0.10cm}
+
+  \begin{ctheorem}[充要条件]
+	\begin{center}
+	  PA2AM 维护算法违反 atomicity\\
+	  $\iff$\\
+	  存在 ONI (old-new inversion) \citeinbeamer{Attiya}{JACM}{95}.
+	\end{center}
+	\vspace{-0.50cm}
+	\fignocaption{width = 0.35\textwidth}{figs/2atomicity-case.pdf}
+  \end{ctheorem}
+
+  \begin{cproof}
+	\textcolor{red}{分情况分析:} 读写操作之间的偏序关系与 reads-from 关系.
+  \end{cproof}
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{PA2AM 量化分析}
+  将 ONI 分解为``并发模式''与``读写模式'':
+
+  \begin{columns}
+	\column{0.45\textwidth}
+	  \begin{cdef}[CP: Concurrency Pattern]
+		\begin{enumerate}
+		  \item $r_{st} \in [w_{st}, w_{ft}]$;
+		  \item $w'$ immediately precedes $w$;
+		  \item $r'_{ft} \in [w_{st}, r_{st}]$.
+		\end{enumerate}
+	  \end{cdef}
+	\column{0.45\textwidth}
+	  \begin{cdef}[RWP: Read-Write Pattern]
+		\begin{enumerate}
+		  \setcounter{enumi}{3}
+		  \item $r = R(w')$;
+		  \item $r' = R(w)$.
+		\end{enumerate}
+	  \end{cdef}
+  \end{columns}
+
+  \vspace{0.60cm}
+
+  \[
+	\textrm{ONI} \triangleq \textrm{CP}  \cap \textrm{RWP}
+  \]
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{PA2AM 量化分析}
+  PA2AM 量化分析: 计算 $\mathbb{P}(\textrm{ONI})$, 其值越小越好
+
+  \begin{enumerate}
+	\setlength{\itemsep}{3pt}
+	\item 排队论建模, 计算 $\mathbb{P}(\textrm{CP})$ 
+	\item 带时间的球盒模型, 计算 $\mathbb{P}(\textrm{RWP|CP})$
+  \end{enumerate}
+  
+  \vspace{0.30cm}
+
+  \begin{figure}
+	\begin{subfigure}{0.50\textwidth}
+	  \centering
+	  \includegraphics[width = 0.80\textwidth]{figs/cp.png}
+	\end{subfigure}%
+	\begin{subfigure}{0.50\textwidth}
+	  \centering
+	  \includegraphics[width = 0.80\textwidth]{figs/rwp.png}
+	\end{subfigure}
+  \end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{PA2AM 量化分析}
+  带时间的球盒模型, 计算 $\mathbb{P}(\textrm{RWP}|\textcolor{red}{\textrm{CP}})$:
+	\begin{description}
+	  \item<3->[建模目的:] $\mathbb{P}\set{R(r) = w'}$ ($R(r) \neq w$)
+	  \item<4->[系统协议:] $n$ 副本节点; ``过半数'' {\small ($M = \lfloor n / 2 \rfloor + 1$)} 通信规则
+	  \item<5->[球盒模型:] 操作产生 $n$ 个球, 发送到 $n$ 个副本盒子
+	  \item<6->[时刻$t$:] 操作 $r$ \textcolor{brown}{恰好前 $M$ 个球}到达相应盒子
+	  \item<7->[$R(r) \neq w$:] 操作 $w$ 相应 $M$ 个球尚在途中 
+	  \item<8->[带时间:] 操作起始时间 + 消息延迟
+	\end{description}
+
+  \begin{figure}[h!]
+    \centering
+    \begin{adjustbox}{max totalsize = {0.50\textwidth}{1.00\textheight}, center}
+      \input{tikz/timed-balls-into-bins-overlay}
+    \end{adjustbox}
+  \end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{PA2AM 量化分析}
+  \begin{figure}
+	\begin{subfigure}{0.40\textwidth}
+	  \centering
+	  \includegraphics[width = 0.80\textwidth]{figs/oni-pgfplot.pdf}
+	  \caption{数值结果.}
+	\end{subfigure}%
+	\begin{subfigure}{0.60\textwidth}
+	  \centering
+	  \includegraphics[width = 0.95\textwidth]{figs/experiment-oni-pgfplot.pdf}
+	  \caption{实验结果.}
+	\end{subfigure}
+  \end{figure}
+
+  \only<2->{
+  \begin{cobservation}[观察一]
+	从概率角度讲, PA2AM 算法极少违反 atomicity 一致性.
+  \end{cobservation}
+  }
+
+  \only<3->{
+  \begin{cobservation}[观察二]
+	与经常发生的并发模式相比, 读写模式起主导作用。
+  \end{cobservation}
+}
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{PA2AM vs. 弱一致性模型}
+  \begin{figure}
+	\begin{subfigure}{0.50\textwidth}
+	  \centering
+	  \includegraphics[width = 0.85\textwidth]{figs/rwn-2am-read-latency-quantiles.pdf}
+	  \caption{读操作延迟对比.}
+	\end{subfigure}%
+	\begin{subfigure}{0.50\textwidth}
+	  \centering
+	  \includegraphics[width = 0.70\textwidth]{figs/rwn-maj.pdf}
+	  \caption{$k$-陈旧度对比.}
+	\end{subfigure}
+	\caption{PA2AM 与 eventual consistency (RWN-Maj 协议) 对比结果.}
+  \end{figure}
+
+  \vspace{-0.50cm}
+  \input{tables/table-rwn-all-staleness}
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{PA2AM 的意义}
+  \mdf{red}{blue}{PA2AM 可作为数据一致性/访问延迟权衡的一种可行选项}{
+	\begin{enumerate}
+	  \item 既 {\small (在大多数时候)} 满足强一致性模型对数据一致性的高标准
+	  \item 又具有弱一致性模型的性能优势
+    \end{enumerate}
+  }
+
+  \pause
+  \vspace{0.30cm}
+
+  \mdf{red}{blue}{PA2AM 在相关工作中的意义}{
+	\begin{enumerate}
+	  \item {\textcolor{gray}{\small (AFAWK)}} \textcolor{red}{首次} ``确定性陈旧度有界 + 概率'' \\
+		\citeinbeamer{Aiyer}{DISC}{05} \citeinbeamer{Lee}{DC}{05} \citeinbeamer{Bailis}{PVLDB}{12}
+	  \item 度量违反 \textcolor{red}{atomicity} {\small (vs. regularity \citeinbeamer{Lee}{DC}{05} \citeinbeamer{Bailis}{PVLDB}{12})} 的程度
+    \end{enumerate}
+  }
+\end{frame}
+%%%%%%%%%%%%%%%

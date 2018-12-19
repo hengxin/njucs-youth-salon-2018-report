@@ -1,0 +1,199 @@
+% file: sections/vpc-related.tex
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \mdf{red}{blue}{VPC 在相关工作中的意义}{
+    \hl{较早关注} {\small (分布式系统领域)} ``弱一致性模型验证''问题 {\small (\hl{\red{2013$\sim$}})}:
+    \begin{description}
+      \setlength{\itemsep}{6pt}
+      \item[强一致性:] \ncite{Gibbons:SICOMP97} \ncite{Cantin:TPDS05} \ncite{Golab:PODC11} 
+      \item[弱一致性:] \ncite{Furbach:ACSD14} \ncite{Bouajjani:POPL17} \\ \ncite{Emmi:CAV18}
+    \end{description}
+  }
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{table}[h]
+    \centering
+    \caption{{\bf VSC} (Verifying Sequential Consistency) 与 {\bf VL} (Verifying Linearizability) 问题的复杂度~\ncite{Gibbons:SICOMP97}}
+    \renewcommand\arraystretch{1.2}
+    % \resizebox{\textwidth}{!}{
+      \begin{tabular}{|c|c|c|}
+	\hline
+	{\bf Variants} & {\bf VSC} & {\bf VL}
+	\\ \hline \hline
+	\hl{\red{General}} & \textsf{NP}-complete & \textsf{NP}-complete
+	\\ \hline
+	$2$ Operations/Process & \textsf{NP}-complete & \textsf{NP}-complete
+	\\
+	$2$ Variables & \textsf{NP}-complete & \textsf{NP}-complete \\
+	$3$ Processes & \textsf{NP}-complete & $O(n \log n)$
+	\\ \hline
+	Read-mapping & \textsf{NP}-complete &  $O(n \log n)$ \\
+	Write-order & \textsf{NP}-complete &  $O(n \log n)$ \\
+	\texttt{read\&write} only & \textsf{NP}-complete & \textsf{NP}-complete \\
+	Conflict-order & $O(n \log n)$ &  $O(n \log n)$
+	\\ \hline
+      \end{tabular}
+    % }
+  \end{table}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}
+  \begin{table}[h]
+    \centering
+    \caption{{\bf VMC} (Verifying Memory Coherence) 问题的复杂度~\ncite{Cantin:TPDS05}}
+    % \renewcommand\arraystretch{1.1}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{|c|c|c|}
+	\hline
+	{\bf Variants} & {\bf \texttt{\bf Read/Write}} & {\bf \texttt{\bf Read-Modify-Write}}
+	\\ \hline \hline
+	$1$ Operation/Process & $O(n \lg n)$ & $O(n^2)$ \\
+	$2$ Operations/Process & ? & \textsf{NP}-complete \\
+	$3+$ Operations/Process & \textsf{NP}-complete & \textsf{NP}-complete
+	\\ \hline
+	Constant $k$ processes & $O(n^k)$ & $O(n^k)$
+	\\ \hline
+	\innercell{c}{$1$ Write/Value \\ {\small (Read-mapping)}} & $O(n)$ & $O(n \lg n)$ \\
+	$2$ Writes/Value & \textsf{NP}-complete & ? \\
+	$3+$ Writes/Value & \textsf{NP}-complete & \textsf{NP}-complete
+	\\ \hline
+	Write-order & $O(n^2)$ & $O(n)$
+	\\ \hline
+      \end{tabular}
+    }
+  \end{table}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{table}[h]
+    \centering
+    \caption{{\bf Atomicity}~\footnote{也称 Linearizability} 相关一致性模型验证问题复杂度 {\small (假设: 不允许写重复值)}}
+    \renewcommand\arraystretch{1.1}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{|c|c|c|c|c|}
+	\hline
+	& \textbf{Safety} & \textbf{Regularity} & \textbf{Atomicity} & \textbf{Sequential}
+	\\ \hline  \hline
+	\begin{tabular}[c]{@{}c@{}}
+	  \textbf{Offline}\\ \ncite{Anderson:HotDep10}
+	\end{tabular}
+	& $O(n^2)$ & $O(n^2)$ & $O(n^3)$ & {\it not studied}
+	\\ \hline
+	\begin{tabular}[c]{@{}c@{}}\textbf{Online}~\footnote[frame]{包含其它假设}\\
+	\ncite{Golab:PODC11} \end{tabular} 
+	& $O(n)$ & $O(n)$ & $O(n \log n)$ & $\textsf{Poly}(n)$
+	\\ \hline
+      \end{tabular}
+    }
+  \end{table}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{table}
+    \centering
+    \caption{$k$-AV {\small ($k$-Atomicity Verification)} 问题复杂度}
+    \renewcommand\arraystretch{1.4}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{|c|c|c|c|}
+	\hline
+	{\bf Problems} & {\bf Variants} 	& {\bf Results} 	& {\bf Work} 				\\ \hline \hline
+	$1$-AV	&	General			&	\npc{}		&	\ncite{Gibbons:SICOMP97}	\\ \hline
+	$1$-AV	&	Write unique value	&	$O(n \log n)$	&	\ncite{Gibbons:SICOMP97}	\\ \hline		
+	$2$-AV	&	Write unique value	&	$O(n \log n)$	&	\ncite{Golab:ICDCS13}		\\ \hline
+	$k$-AV	&	\innercell{c}{Write unique value \\ Bounded concurrency}	&	$O(n^2)$	
+		&	\innercell{c}{\ncite{Golab:PODC15} \\ \ncite{Golab:SICOMP18}}				\\ \hline
+    \hl{$k$-AV} & \hl{\red{Write unique value}}
+		& \only<2->{
+		    \begin{minipage}{0.25\textwidth}
+		      \includegraphics[width = \linewidth]{figs/dont-know-panda}
+		    \end{minipage} }	
+		& \only<3->{
+		    \begin{minipage}{0.2\textwidth}
+		      \includegraphics[width = \linewidth]{figs/waiting-bear}
+		    \end{minipage} } \\ \hline
+      \end{tabular}
+    }
+  \end{table}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  % \centerline{直观地说, 每个操作 {\small (\textcolor{blue}{区间})} 都如同瞬时 {\small (\textcolor{blue}{点})} 发生的一样。}
+  \begin{center}
+    \hl{\large Atomicity = 实时序 + 读写语义} \\[5pt]
+
+    \ncite{Lamport:DC86}
+  \end{center}
+
+  \vspace{0.20cm}
+  \begin{center}
+    \resizebox{0.60\textwidth}{!}{\input{tikz/atomicity-example}}
+  \end{center}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{center}
+    \hl{\large $k$-Atomicity = 实时序 + $k$-读写语义} \\[5pt]
+    
+    \ncite{Aiyer:DISC05} \ncite{Taubenfeld:ICDCN13}
+  \end{center}
+
+  \vspace{0.20cm}
+  \begin{center}
+    \resizebox{0.75\textwidth}{!}{\input{tikz/katomicity-trace-not12atomic}}
+  \end{center}
+
+  \uncover<3->{
+    \[ 
+      3\text{-Atomicity}: w5\quad \red{w2}\quad w1\quad r1\quad w3\quad w4\quad \red{r2}\quad r3\quad r4 
+    \]
+  }
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{cdef}[$k$-AV {\small ($k$-Atomicity Verification)} 判定问题]
+    \vspace{8pt}
+    \begin{description}
+      \setlength{\itemsep}{8pt}
+      \item[实例:] 系统执行 $e$ \blue{\small \emph{(不允许写重复值)}}、参数 $k$
+      \item[问题:] 该执行 $e$ 是否满足 $k$\emph{-Atomicity?}
+    \end{description}
+  \end{cdef}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{center}
+    \resizebox{0.50\textwidth}{!}{\input{tikz/verification-quantification-ruler}}
+  \end{center}
+
+  \vspace{0.10cm}
+  \uncover<2->{
+    \begin{center}
+      \red{\large 协议量化分析} \\[5pt]
+      \ncite{Lee:DC05} \ncite{Bailis:VLDB12} \ncite{Chatterjee:PODC17}
+    \end{center}
+  }
+
+  \vspace{0.50cm}
+  \uncover<3->{
+    \centerline{\hl{\large PA2AM: Probabilistically-Atomic $2$-Atomicity}}
+  }
+\end{frame}
+%%%%%%%%%%%%%%%

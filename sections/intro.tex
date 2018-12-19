@@ -1,0 +1,181 @@
+% file: sections/intro.tex
+
+\section{研究背景}
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{center}
+    {\large Abstract Data Types} \ncite{Liskov:VHLL74} \\[8pt]
+
+    (单线程; 顺序语义)
+  \end{center}
+
+  \begin{columns}
+    \column{0.40\textwidth}
+      \fignocaption{width = 0.60\textwidth}{figs/alg-ds-wirth}
+    \pause
+    \column{0.40\textwidth}
+      \fignocaption{width = 0.25\textwidth}{figs/adt}
+  \end{columns}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{center}
+    {\large Concurrent Data Types} \ncite{Herlihy:TOPLAS90} \\[8pt]
+
+    (多线程; 并发语义)
+  \end{center}
+
+  \begin{columns}
+    \column{0.40\textwidth}
+      \fignocaption{width = 0.70\textwidth}{figs/taomp-herlihy}
+    \pause
+    \column{0.50\textwidth}
+      \fignocaption{width = 0.45\textwidth}{figs/cdt}
+
+      \only<3->{
+	\begin{center}
+	  \hl{\Large PL} {(Programming Language)}
+	\end{center}
+      }
+  \end{columns}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{center}
+    \hl{\large Replicated Data Types} \ncite{Shapiro:TR11} \ncite{Burckhardt:POPL14} \\[8pt]
+
+    (多副本; 复制语义)
+  \end{center}
+
+  \pause
+  \fignocaption{width = 0.30\textwidth}{figs/rdt}
+
+  \pause
+  \begin{center}
+    \hl{\Large DC} {(Distributed Computing)}
+  \end{center}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+% \begin{frame}{}
+%   \begin{columns}
+%     \column{0.50\textwidth}
+%       \fignocaption{width = 0.60\textwidth}{figs/keep-calm-why-bother}
+%     \pause
+%     \column{0.50\textwidth}
+%       \centerline{\hl{\red{\Huge 新平台}}}
+%   \end{columns}
+% \end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{center}
+    {\hl{\Large 新平台: 大规模分布式系统}}
+  \end{center}
+
+  \fignocaption{width = 0.50\textwidth}{figs/sina-weibo-world-map.pdf}
+
+  \pause
+  \vspace{0.10cm}
+  \begin{center}
+    低延迟 \quad 高可用性 {\small (4个9)} \quad 高容错性 \quad 高可扩展性
+  \end{center}
+
+  % \begin{columns}
+  %   \column{0.40\textwidth}
+  %   新浪微博社交应用~\footnotemark:
+  %   \begin{itemize}
+  %     \item 日均用户近一亿名
+  %     \item 日均消息近一亿条
+  %   \end{itemize}
+  %   \pause
+  %   \column{0.50\textwidth}
+  %   特性需求: 
+  %   \begin{itemize}
+  %     \item 低延迟, 高可用性 (4个9~\footnotemark)
+  %     \item 高容错性, 高可扩展性
+  %   \end{itemize}
+  % \end{columns}
+  % 
+  % \footnotetext[1]{2015第三季度; 数据来自 \href{https://www.chinainternetwatch.com/15740/weibo-q3-2015/}{China Internet Watch}.}
+  % % See http://tex.stackexchange.com/a/340079/23098
+  % \alt<1>{\let\thefootnote\relax\footnotetext{~}}{\footnotetext[2]{数据来自 \href{http://www.infoq.com/cn/articles/weibo-platform-availability-9999}{InfoQ}.}}
+\end{frame}
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \graphicspath{{tikz/}}
+  \begin{figure}[h!]
+    \centering
+    \begin{adjustbox}{max totalsize = {0.50\textwidth}{1.00\textheight}, center}
+      \input{tikz/distributed-data-overlay-for-background}
+    \end{adjustbox}
+  \end{figure}
+
+  \vspace{0.20cm}
+  \begin{center}
+    \begin{minipage}{0.65\textwidth}
+      \red{\large 分布数据 \term{distributed data}:}
+
+      \vspace{0.20cm}
+      \begin{enumerate}
+	\item<2-> 分区 \term{partition}: 水平扩展
+	\item<3-> \hl{副本 \term{replication}}: 就近访问, 容灾备份
+      \end{enumerate}
+    \end{minipage}
+  \end{center}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{center}
+    \begin{minipage}{0.50\textwidth}
+      {\large 复制数据类型} \ncite{Shapiro:TR11} 
+
+      \vspace{0.20cm}
+      \begin{itemize}
+	\setlength{\itemsep}{4pt}
+	\item Read/Write Register
+	\item Counter
+	\item Set
+	\item List
+	\item HashMap
+	\item Disjoint Set
+	\item Graph
+	\item $\dots$
+      \end{itemize}
+    \end{minipage}
+  \end{center}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{columns}
+    \column{0.40\textwidth}
+      \fignocaption{width = 0.98\textwidth}{figs/what-is-new}
+    \column{0.60\textwidth}
+      \centerline{\hl{\red{\Huge 新问题, 新挑战}}}
+  \end{columns}
+
+  \pause
+  \vspace{0.30cm}
+  \fignocaption{frame, width = 0.80\textwidth}{figs/rdt-popl}
+  \centerline{\ncite{Burckhardt:POPL14}}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{center}
+    \resizebox{0.65\textwidth}{!}{\input{tikz/rdt-research-two-work}}
+  \end{center}
+\end{frame}
+%%%%%%%%%%%%%%%

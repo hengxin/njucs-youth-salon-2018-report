@@ -1,0 +1,20 @@
+% file: sections/vpc.tex
+
+\subsection{VPC: Pipelined-RAM 一致性验证}
+
+\newcommand{\pram}{Pipelined-RAM}
+\newcommand{\PRAM}{PRAM}
+\newcommand{\vpc}[1]{\ifthenelse{\isempty{#1}{}}{\textsf{VPC}}{\textsf{VPC-\MakeUppercase{#1}}}} 
+\newcommand{\npc}{$\sf{NP}$-complete}
+\newcommand{\npcn}{$\sf{NP}$-completeness}
+\newcommand{\rwclosure}{\textsc{RW-Closure}}
+\newcommand{\readcentric}{\textsc{Read-Centric}}
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \fignocaption{width = 0.65\textwidth}{figs/rdt-research-vpc}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+\input{sections/vpc-work}
+\input{sections/vpc-related}

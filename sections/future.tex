@@ -1,0 +1,44 @@
+% file: sections/future.tex
+
+\section{未来工作}
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \fignocaption{width = 0.618\textwidth}{figs/one-more-thing}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \fignocaption{width = 0.65\textwidth}{figs/rdt-research-spec}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{center}
+    \uncover<2->{\hl{\large 规约: 数据一致性模型 (Consistency Model)}}
+  \end{center}
+
+  \begin{columns}
+    \column{0.50\textwidth}
+      \begin{center}
+	多处理器系统中的并发数据类型
+      \end{center}
+      \vspace{0.60cm}
+      \fignocaption{width = 0.50\textwidth}{figs/cdt}
+    \column{0.50\textwidth}
+      \begin{center}
+	分布式系统中的复制数据类型
+      \end{center}
+      \fignocaption{width = 0.60\textwidth}{figs/rdt}
+  \end{columns}
+
+  \vspace{0.20cm}
+  \uncover<3->{
+    \begin{center}
+      \red{\LARGE PL + DC \uncover<4->{+ FM}}	\ncite{Burckhardt:POPL14}
+    \end{center}
+  }
+\end{frame}
+%%%%%%%%%%%%%%%
