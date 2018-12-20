@@ -3,7 +3,7 @@
 %%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
   \begin{center}
-    \begin{mdframed}[frametitle = {\large Brief Announcement @ PODC'2018~\footnotemark}, frametitlerule = true, frametitlebackgroundcolor = brown!20,
+    \begin{mdframed}[frametitle = {\large 复制列表数据类型~\footnotemark}, frametitlerule = true, frametitlebackgroundcolor = brown!20,
       frametitleaboveskip = 8pt, frametitlebelowskip = 8pt, innertopmargin = 10pt]
       {\large 实现复制列表的 \blue{Jupiter 协议}~\ncite{Nichols:UIST95}\footfullcite{Nichols:UIST95} \red{满足} \\
       \blue{weak list specification}~\ncite{Attiya:PODC16}\footfullcite{Attiya:PODC16}.} \\[15pt]
@@ -16,7 +16,22 @@
 
 %%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
-  \centerline{\Huge \teal{Weak List Specification}}
+  \fignocaption{width = 0.30\textwidth}{figs/outline}
+  \begin{center}
+    \hl{\large 提纲}
+  \end{center}
+
+  \pause
+  \begin{columns}
+    \column{0.60\textwidth}
+      \begin{enumerate}[<+->]
+	\setlength{\itemsep}{12pt}
+	\item 为什么要研究复制列表数据类型?
+	\item 什么是 \red{weak list specification} \wlspec{}?
+	\item \red{Jupiter} 协议是如何工作的?
+	\item 如何证明Jupiter满足\wlspec{}?
+      \end{enumerate}
+  \end{columns}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%
 
@@ -27,15 +42,15 @@
   % \vspace{-0.20cm}
   \fignocaption{width = 0.55\textwidth}{figs/coeditor}
 
-  % \pause
-  % \vspace{-0.40cm}
-  % \begin{center}
-  %   \begin{itemize}
-  %     \centering
-  %     \item replica要\red{立即}响应本地用户操作 \\[4pt]
-  %     \item 更新操作\red{异步}传播到其它replica
-  %   \end{itemize}
-  % \end{center}
+  \pause
+  \vspace{-0.40cm}
+  \begin{center}
+    \begin{itemize}
+      \centering
+      \item 副本节点要\red{立即}响应本地用户操作 \\[4pt]
+      \item 更新操作\red{异步}传播到其它副本节点
+    \end{itemize}
+  \end{center}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%
 
@@ -59,6 +74,23 @@
 
 %%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
+  \begin{cdef}[最终收敛性 (Eventual Convergence)~\ncite{Ellis:SIGMOD89}]
+    当系统处于``静默'' \teal{\emph{(Quiescence)}} 状态时, 所有副本节点上的列表是相同的。
+  \end{cdef}
+
+  \vspace{0.30cm}
+  \begin{cdef}[强最终一致性 (Strong Eventual Consistency)~\ncite{Shapiro:SSS11}]
+    如果两个副本节点处理了同一组更新操作, 则它们的列表是相同的。
+  \end{cdef}
+
+  \pause
+  \vspace{0.60cm}
+  \centerline{\red{\large 对系统的\red{中间状态}缺少足够的约束}}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
   \fignocaption{width = 0.80\textwidth, frame}{figs/podc16-attiya}
 
   \vspace{0.20cm}
@@ -73,6 +105,10 @@
 
 %%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
+  \begin{center}
+    {\large \wlspec{} 等价于:}
+  \end{center}
+
   \begin{cdef}[\hl{状态对兼容性} (Pairwise State Compatibility Property)]
     任给两个列表状态 $\sigma_0$、$\sigma_1$, 若它们含有两个共同元素 $a$、$b$, \\
     则 $a$、$b$ 在 $\sigma_0$ 与 $\sigma_1$ 中的相对顺序保持一致。
@@ -89,6 +125,12 @@
       \fignocaption{width = 0.65\textwidth}{figs/ex-strong-list-spec}
       \vspace{-0.60cm}
       \fignocaption{width = 0.20\textwidth}{figs/green-check}
+      \vspace{-1.20cm}
+      \uncover<3->{
+	\begin{center}
+	  \red{\footnotesize ``Strong List Specification''不允许}
+	\end{center}
+      }
   \end{columns}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%
@@ -110,7 +152,7 @@
   \vspace{-0.60cm}
   \uncover<2->{
     \begin{center}
-      Server 负责将所有操作序列化 \\[6pt]
+      \red{Server 负责将所有操作序列化} \\[6pt]
       用户操作 $\xrightarrow[\text{\hl{立即返回}}]{\quad \text{提交} \quad}$ Client 
       $\xrightarrow[\text{更新操作}]{\quad \text{FIFO} \quad}$ Server $\xrightarrow[\text{更新操作}]{\quad \text{FIFO} \quad}$ 其它Clients 
     \end{center}
@@ -120,8 +162,12 @@
 
 %%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
-  \centerline{\hl{\red{\large 操作转换}} (Operational Transformation; OT)~\ncite{Ellis:SIGMOD89}}
+  \begin{center}
+    {\large \red{挑战:} \hl{如何处理并发操作带来的冲突?}} \\[3pt] \pause
+    {\small \teal{(The server is not drawn.)}}
+  \end{center}
 
+  \vspace{-0.80cm}
   \begin{columns}
     \column{0.40\textwidth}
       \begin{center}
@@ -132,6 +178,11 @@
 	\input{tikz/ot-tcs06-tikz}
       \end{center}
   \end{columns}
+
+  \vspace{-0.30cm}
+  \begin{center}
+    \uncover<5->{\large \red{解决方案:} \hl{操作转换} (Operational Transformation; OT)\\\ncite{Ellis:SIGMOD89}}
+  \end{center}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%
 
@@ -140,7 +191,7 @@
   \fignocaption{width = 0.40\textwidth}{figs/ot}
 
   \begin{equation*}
-    \text{\hl{交换律}}\;\; \resizebox{0.35\textwidth}{!}{$\sigma; o_1; o_2' \equiv \sigma; o_2; o_1'$}
+    \text{\hl{交换律:}}\;\; \resizebox{0.35\textwidth}{!}{$\sigma; o_1; o_2' \equiv \sigma; o_2; o_1'$}
   \end{equation*}
 
   \centerline{\ncite{Ellis:SIGMOD89}}
@@ -150,7 +201,35 @@
 %%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
   \begin{center}
+    \red{\large 问题: 如果副本节点之间偏离 \teal{\small (diverge)} 多个 ($\ge 2$) 操作, 怎么办?} \\[8pt]
+
     \resizebox{0.75\textwidth}{!}{\input{tikz/ot-diverge-two}}
+  \end{center}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{center}
+    \hl{核心问题:} \\[8pt]
+    当副本节点$r$接收到由Server转发的操作$o$时，\\
+    如何对$o$执行操作转换?
+  
+    \pause
+    \vspace{0.80cm}
+    \red{\large 与哪些操作进行转换?以什么顺序进行转换?}
+
+    \pause
+    \vspace{0.80cm}
+
+    \hl{核心思想:} \\[3pt]
+    \begin{columns}
+      \column{0.72\textwidth}
+	\begin{enumerate}
+	  \item 与``$r$ 上已执行且与 $o$ \purple{并发}的操作''进行转换
+	  \item 以``由 Server 确定的\purple{序列化}顺序''进行转换 
+	\end{enumerate}
+    \end{columns}
   \end{center}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%
@@ -192,7 +271,7 @@
     \fignocaption{width = 0.40\textwidth}{figs/mismatch}
     \vspace{0.20cm}
 
-    {\large \blue{Jupiter} 协议中, 每个replica所维护的\red{局部视图}}
+    {\large \blue{Jupiter} 协议中, 每个副本节点所维护的\red{局部视图}}
   \end{center}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%
@@ -204,7 +283,8 @@
   \pause
   \vspace{1.0cm}
   \begin{ctheorem}[等价性]
-    在相同的操作调度下, \emph{CJupiter} 与 \emph{Jupiter} 中的对应replica的行为 {\small (状态序列)} 是相同的。
+    在相同的操作调度 \emph{\teal{\small (schedule)}} 下, 
+    \emph{CJupiter} 与 \emph{Jupiter} 中的对应副本节点的行为 \emph{\teal{\small (behavior; {\small 状态序列})}} 是相同的。
   \end{ctheorem}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%
@@ -212,11 +292,17 @@
 %%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
   \begin{center}
-    {\large CJupiter 为每个replica维护一个 \hl{\red{$n$-ary} \blue{有序}状态空间}}
+    {\large CJupiter 为每个副本节点维护一个 \hl{\red{$n$-ary} \blue{有序}状态空间}}
   \end{center}
 
   \begin{center}
-    \resizebox{0.55\textwidth}{!}{\input{tikz/cjupiter-allinone}}
+    \resizebox{0.40\textwidth}{!}{\input{tikz/cjupiter-allinone}}
+  \end{center}
+
+  \pause
+  \begin{center} 
+    每个node可以有 \red{$>2$} 条出边 \\[5pt] 
+    每个node的所有出边按照其上标记操作的``序列化''顺序排成\red{全序}
   \end{center}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%
@@ -228,9 +314,12 @@
       {\large \emph{CJupiter} 所维护的 $(n+1)$ 个$n$-ary有序状态空间是相同的。}
     \end{prop}
 
-    \resizebox{0.50\textwidth}{!}{\input{tikz/cjupiter-allinone-path}}
+    \resizebox{0.45\textwidth}{!}{\input{tikz/cjupiter-allinone-path}}
 
-    \uncover<2->{每个replica的行为对应于该状态空间中的一条\hl{\red{路径}}}
+    \pause
+    每个副本节点的行为对应于该状态空间中的一条\hl{\red{路径}} \\[3pt]
+    \pause
+    \red{单个$n$-ary有序状态空间包含了系统所有可能的状态}
   \end{center}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%

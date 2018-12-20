@@ -11,7 +11,7 @@
 \usecolortheme{beaver} % try beaver, dolphin, seahorse
 % \usefonttheme[onlymath]{serif} % try "professionalfonts"
 \usefonttheme{serif}  % standard font (same with that in ``standalone'')
-\setCJKmainfont{Microsoft YaHei} % try SimSun
+% \setCJKmainfont{Microsoft YaHei} % try SimSun
 
 \usepackage{amsmath, amsfonts, amssymb, mathtools, pifont}
 \newcommand{\cmark}{\ding{51}}%
@@ -73,6 +73,10 @@
 \DeclareCaptionLabelSeparator{none}{}
 \captionsetup{labelsep = none}
 
+\makeatletter
+\let\@@magyar@captionfix\relax
+\makeatother
+
 \usepackage[export]{adjustbox}
 % for fig without caption: #1: width/size; #2: fig file
 \newcommand{\fignocaption}[2]{
@@ -125,7 +129,7 @@
 \usepackage[natbib = true, backend = bibtex, style = authoryear]{biblatex}
 \setbeamertemplate{bibliography item}[article]
 \renewcommand*{\bibfont}{\footnotesize}
-\addbibresource{ccf2018-report.bib}
+\addbibresource{njucs-youth-salon-2018-report.bib}
 
 \newcommand{\ncite}[1]{\violet{\footnotesize [\cite{#1}]}}
 
