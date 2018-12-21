@@ -139,7 +139,7 @@
 %%%%%%%%%%%%%%%
 \begin{frame}{}
   \begin{center}
-    \hl{\large $\mathcal{I}$-Atomicity = $i$-实时序 + 读写语义}
+    \hl{\large $\mathcal{I}$-Atomicity = \red{$i$-实时序} + 读写语义}
   \end{center}
 
   \vspace{0.60cm}
@@ -148,12 +148,32 @@
   \pause
   \vspace{0.30cm}
   \[
-    f(\set{\text{inversions}}) \le i
+    f\Big(\set{\text{inversions}}\Big) \le i
   \]
 
-  \pause
   \vspace{0.50cm}
   \centerline{\large 定义\red{框架}}
+\end{frame}
+%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%
+\begin{frame}{}
+  \begin{center}
+    \resizebox{0.50\textwidth}{!}{\input{tikz/verification-quantification-ruler}}
+  \end{center}
+
+  \vspace{0.10cm}
+  \uncover<2->{
+    \begin{center}
+      \red{\large 协议量化分析} \\[5pt]
+      \ncite{Lee:DC05} \ncite{Bailis:VLDB12} \ncite{Chatterjee:PODC17}
+    \end{center}
+  }
+
+  \vspace{0.50cm}
+  \uncover<3->{
+    \centerline{\hl{\large PA2AM: Probabilistically-Atomic $2$-Atomicity}}
+  }
 \end{frame}
 %%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%% End: VPC %%%%%%%%%%%%%%%%%%%%

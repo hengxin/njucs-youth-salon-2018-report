@@ -1,16 +1,16 @@
 % file: sections/vpc-related.tex
 
 %%%%%%%%%%%%%%%
-\begin{frame}{}
-  \mdf{red}{blue}{VPC 在相关工作中的意义}{
-    \hl{较早关注} {\small (分布式系统领域)} ``弱一致性模型验证''问题 {\small (\hl{\red{2013$\sim$}})}:
-    \begin{description}
-      \setlength{\itemsep}{6pt}
-      \item[强一致性:] \ncite{Gibbons:SICOMP97} \ncite{Cantin:TPDS05} \ncite{Golab:PODC11} 
-      \item[弱一致性:] \ncite{Furbach:ACSD14} \ncite{Bouajjani:POPL17} \\ \ncite{Emmi:CAV18}
-    \end{description}
-  }
-\end{frame}
+% \begin{frame}{}
+%   \mdf{red}{blue}{VPC 在相关工作中的意义}{
+%     \hl{较早关注} {\small (分布式系统领域)} ``弱一致性模型验证''问题 {\small (\hl{\red{2013$\sim$}})}:
+%     \begin{description}
+%       \setlength{\itemsep}{6pt}
+%       \item[强一致性:] \ncite{Gibbons:SICOMP97} \ncite{Cantin:TPDS05} \ncite{Golab:PODC11} 
+%       \item[弱一致性:] \ncite{Furbach:ACSD14} \ncite{Bouajjani:POPL17} \\ \ncite{Emmi:CAV18}
+%     \end{description}
+%   }
+% \end{frame}
 %%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%
@@ -174,26 +174,5 @@
       \item[问题:] 该执行 $e$ 是否满足 $k$\emph{-Atomicity?}
     \end{description}
   \end{cdef}
-\end{frame}
-%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%
-\begin{frame}{}
-  \begin{center}
-    \resizebox{0.50\textwidth}{!}{\input{tikz/verification-quantification-ruler}}
-  \end{center}
-
-  \vspace{0.10cm}
-  \uncover<2->{
-    \begin{center}
-      \red{\large 协议量化分析} \\[5pt]
-      \ncite{Lee:DC05} \ncite{Bailis:VLDB12} \ncite{Chatterjee:PODC17}
-    \end{center}
-  }
-
-  \vspace{0.50cm}
-  \uncover<3->{
-    \centerline{\hl{\large PA2AM: Probabilistically-Atomic $2$-Atomicity}}
-  }
 \end{frame}
 %%%%%%%%%%%%%%%
